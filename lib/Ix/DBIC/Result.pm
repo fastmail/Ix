@@ -765,18 +765,6 @@ sub ix_update_extra_search ($self, $ctx, $arg) {
   );
 }
 
-=method ix_update_extra_select
-
-Extra fields to select when running Foo/set#update searches. This is useful if
-your hook methods need to have access to additional data that wasn't necessarily
-provided by the client. If provided, should return an arrayref.
-
-=cut
-
-sub ix_update_extra_select {
-  return [];
-}
-
 =method ix_highest_state($since, $rows)
 
 Returns the highest state for a given set of rows.
