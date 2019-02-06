@@ -799,13 +799,6 @@ sub ix_item_created_since ($self, $item, $since) {
   return $item->{modSeqCreated} > $since;
 }
 
-# XXX: when going through to document this code, I think it is now dead: it was
-# removed in aedf25370c, when we made the change that Foo/changes must return an
-# error if we can't compute a small enough response. -- michael, 2020-02-14
-sub ix_update_single_state_conds ($self, $example_row) {
-  return { 'me.modSeqChanged' => $example_row->{modSeqChanged} }
-}
-
 =method ix_compare_state($since, $state)
 
 Used internally by L<Ix::DBIC::ResultSet> to determine how to act for
