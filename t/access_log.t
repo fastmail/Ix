@@ -17,7 +17,11 @@ use Test::More;
 my ($app, $jmap_tester) = Bakesale::Test->new_test_app_and_tester;
 \my %account = Bakesale::Test->load_trivial_account($app->processor->schema_connection);
 
-$jmap_tester->_set_cookie('bakesaleUserId', $account{users}{rjbs});
+$jmap_tester->ua->set_cookie({
+  api_uri => $jmap_tester->api_uri,
+  name    => 'bakesaleUserId',
+  value   => $account{users}{rjbs},
+});
 
 my $log_data;
 open(my $log_fh, '>', \$log_data);
@@ -46,7 +50,8 @@ my %common = (
 );
 
 # Should be ignored, behind_proxy defaults to disabled.
-$jmap_tester->ua->default_header('X-Forwarded-For' => '1.2.3.4');
+# XXX This is assuming an LWP UA. -- rjbs, 2019-04-24
+$jmap_tester->ua->lwp->default_header('X-Forwarded-For' => '1.2.3.4');
 
 my $res = $jmap_tester->request([
   [ pieTypes => { tasty => 1 } ],
@@ -159,10 +164,15 @@ for my $line (@lines) {
     api_uri => "http://bakesale.local:65534/jmap",
   });
 
-  $jmap_tester->_set_cookie('bakesaleUserId', $account{users}{rjbs});
+  $jmap_tester->ua->set_cookie({
+    api_uri => $jmap_tester->api_uri,
+    name    => 'bakesaleUserId',
+    value   => $account{users}{rjbs},
+  });
 
   # Our real request ip!
-  $jmap_tester->ua->default_header('X-Forwarded-For' => '1.2.3.4');
+  # XXX This is assuming an LWP UA. -- rjbs, 2019-04-24
+  $jmap_tester->ua->lwp->default_header('X-Forwarded-For' => '1.2.3.4');
 
   my $res = $jmap_tester->request([
     [ pieTypes => { tasty => 1 } ],
