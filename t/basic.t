@@ -27,7 +27,11 @@ my ($app, $jmap_tester) = Bakesale::Test->new_test_app_and_tester;
 
 my $accountId = $account{accounts}{rjbs};
 
-$jmap_tester->_set_cookie('bakesaleUserId', $account{users}{rjbs});
+$jmap_tester->ua->set_cookie({
+  api_uri => $jmap_tester->api_uri,
+  name    => 'bakesaleUserId',
+  value   => $account{users}{rjbs},
+});
 
 {
   $app->clear_transaction_log;
@@ -1565,7 +1569,11 @@ subtest "ix_created test" => sub {
 };
 
 {
-  $jmap_tester->_set_cookie('bakesaleUserId', $account{users}{alh});
+  $jmap_tester->ua->set_cookie({
+    api_uri => $jmap_tester->api_uri,
+    name    => 'bakesaleUserId',
+    value   => $account{users}{alh},
+  });
 
   # Check state, should be 0
   my $res = $jmap_tester->request([
@@ -1672,7 +1680,11 @@ subtest "ix_created test" => sub {
   is_deeply($args->{updated}, [], 'no updates');
 
   # Put this back
-  $jmap_tester->_set_cookie('bakesaleUserId', $account{users}{rjbs});
+  $jmap_tester->ua->set_cookie({
+    api_uri => $jmap_tester->api_uri,
+    name    => 'bakesaleUserId',
+    value   => $account{users}{rjbs},
+  });
 }
 
 subtest "deleted entites in get*Updates calls" => sub {
@@ -1763,7 +1775,13 @@ subtest "additional request handling" => sub {
 
   my $uri = $jmap_tester->api_uri;
   $uri =~ s/jmap$/secret/;
-  my $res = $jmap_tester->ua->get($uri);
+
+  my $res = $jmap_tester->ua->request(
+    $jmap_tester,
+    HTTP::Request->new(GET => $uri),
+    'jmap',
+  )->get;
+
   is(
     $res->content,
     "Your secret is safe with me.\n",
@@ -1781,7 +1799,7 @@ subtest "additional request handling" => sub {
 };
 
 subtest "good call gets headers" => sub {
-  $jmap_tester->ua->default_header('Origin' => 'example.net');
+  $jmap_tester->ua->set_default_header('Origin' => 'example.net');
 
   my $res = $jmap_tester->request([
     [ 'Cookie/get' => {} ],
@@ -2481,7 +2499,14 @@ subtest "exeptions are not thrown twice" => sub {
 
   $app->processor->clear_exceptions;
 
-  my (undef, $res) = capture_stderr(sub { $jmap_tester->ua->get($uri) });
+  my (undef, $res) = capture_stderr(sub {
+    $jmap_tester->ua->request(
+      $jmap_tester,
+      HTTP::Request->new(GET => $uri),
+      'jmap',
+    )->get;
+  });
+
   like(
     $res->content,
     qr/"error":"internal"/,

@@ -33,7 +33,7 @@ my ($app, $jmap_tester) = Bakesale::Test->new_test_app_and_tester;
     value   => $bad_id,
   });
 
-  $jmap_tester->ua->default_header('Origin' => 'example.net');
+  $jmap_tester->ua->set_default_header('Origin' => 'example.net');
 
   my $res = $jmap_tester->request([[ 'Cookie/get' => {} ]])->http_response;
   is($res->code, 410, 'got 410 with bad cookie');
