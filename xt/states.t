@@ -19,14 +19,22 @@ use Process::Status;
 my ($app, $jmap_tester) = Bakesale::Test->new_test_app_and_tester;
 \my %account = Bakesale::Test->load_trivial_account($app->processor->schema_connection);
 
-$jmap_tester->_set_cookie('bakesaleUserId', $account{users}{rjbs});
+$jmap_tester->ua->set_cookie({
+  api_uri => $jmap_tester->api_uri,
+  name    => 'bakesaleUserId',
+  value   => $account{users}{rjbs},
+});
 
 # For a different account
 my $jmap_tester2 = JMAP::Tester->new({
   api_uri => $jmap_tester->api_uri,
 });
 
-$jmap_tester2->_set_cookie('bakesaleUserId', $account{users}{alh});
+$jmap_tester2->ua->set_cookie({
+  api_uri => $jmap_tester->api_uri,
+  name    => 'bakesaleUserId',
+  value   => $account{users}{alh},
+});
 
 my %children;
 my $parent_pid = $$;
