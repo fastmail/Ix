@@ -51,7 +51,7 @@ my %common = (
 
 # Should be ignored, behind_proxy defaults to disabled.
 # XXX This is assuming an LWP UA. -- rjbs, 2019-04-24
-$jmap_tester->ua->lwp->default_header('X-Forwarded-For' => '1.2.3.4');
+$jmap_tester->ua->set_default_header('X-Forwarded-For' => '1.2.3.4');
 
 my $res = $jmap_tester->request([
   [ pieTypes => { tasty => 1 } ],
@@ -171,8 +171,7 @@ for my $line (@lines) {
   });
 
   # Our real request ip!
-  # XXX This is assuming an LWP UA. -- rjbs, 2019-04-24
-  $jmap_tester->ua->lwp->default_header('X-Forwarded-For' => '1.2.3.4');
+  $jmap_tester->ua->set_default_header('X-Forwarded-For' => '1.2.3.4');
 
   my $res = $jmap_tester->request([
     [ pieTypes => { tasty => 1 } ],
