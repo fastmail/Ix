@@ -1776,11 +1776,7 @@ subtest "additional request handling" => sub {
   my $uri = $jmap_tester->api_uri;
   $uri =~ s/jmap$/secret/;
 
-  my $res = $jmap_tester->ua->request(
-    $jmap_tester,
-    HTTP::Request->new(GET => $uri),
-    'jmap',
-  )->get;
+  my $res = $jmap_tester->http_get($uri);
 
   is(
     $res->content,
@@ -2500,11 +2496,7 @@ subtest "exeptions are not thrown twice" => sub {
   $app->processor->clear_exceptions;
 
   my (undef, $res) = capture_stderr(sub {
-    $jmap_tester->ua->request(
-      $jmap_tester,
-      HTTP::Request->new(GET => $uri),
-      'jmap',
-    )->get;
+    $jmap_tester->http_get($uri);
   });
 
   like(
