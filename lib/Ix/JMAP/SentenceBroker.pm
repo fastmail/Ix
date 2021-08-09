@@ -63,13 +63,15 @@ sub paragraph_for_items {
   });
 }
 
-=method abort_callback
+=method abort
 
 This method will die if called.
 
 =cut
 
-sub abort_callback       { sub { ... } };
+sub abort {
+  Carp::confess("abort called on Ix::JMAP::SentenceCollection; this should not happen!");
+}
 
 =method strip_json_types
 

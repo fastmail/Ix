@@ -32,7 +32,11 @@ use Path::Tiny;
 my ($app, $jmap_tester) = Bakesale::Test->new_test_app_and_tester;
 \my %account = Bakesale::Test->load_trivial_account($app->processor->schema_connection);
 
-$jmap_tester->_set_cookie('bakesaleUserId', $account{users}{rjbs});
+$jmap_tester->ua->set_cookie({
+  api_uri => $jmap_tester->api_uri,
+  name    => 'bakesaleUserId',
+  value   => $account{users}{rjbs},
+});
 
 # Clear our states table
 $app->processor->schema_connection->storage->dbh->do("DELETE FROM states");

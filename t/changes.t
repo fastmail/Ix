@@ -14,7 +14,11 @@ use Test::Abortable;
 
 my ($app, $jmap_tester) = Bakesale::Test->new_test_app_and_tester;
 my ($admin_id, $accountId) = Bakesale::Test->load_single_user($app->processor->schema_connection);
-$jmap_tester->_set_cookie('bakesaleUserId', $admin_id);
+$jmap_tester->ua->set_cookie({
+  api_uri => $jmap_tester->api_uri,
+  name    => 'bakesaleUserId',
+  value   => $admin_id,
+});
 
 # Set our base state to 1-1 so we can ensure we're told to resync if we
 # pass in a sinceState lower than that (0-1 or 1-0 for example).
