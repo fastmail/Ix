@@ -1,6 +1,7 @@
 Revision history for Ix
 
 {{$NEXT}}
+        - updated to work with JMAP-Tester's new futures-supporting code
 
 0.004     2020-06-05 10:57:39-04:00 America/New_York
         - fix canCalculateChanges / canCalculateUpdates misnaming
