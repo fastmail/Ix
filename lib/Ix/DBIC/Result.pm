@@ -765,18 +765,6 @@ sub ix_update_extra_search ($self, $ctx, $arg) {
   );
 }
 
-=method ix_update_extra_select
-
-Extra fields to select when running Foo/set#update searches. This is useful if
-your hook methods need to have access to additional data that wasn't necessarily
-provided by the client. If provided, should return an arrayref.
-
-=cut
-
-sub ix_update_extra_select {
-  return [];
-}
-
 =method ix_highest_state($since, $rows)
 
 Returns the highest state for a given set of rows.
@@ -797,13 +785,6 @@ override this method if you're not using the default state strings.)
 
 sub ix_item_created_since ($self, $item, $since) {
   return $item->{modSeqCreated} > $since;
-}
-
-# XXX: when going through to document this code, I think it is now dead: it was
-# removed in aedf25370c, when we made the change that Foo/changes must return an
-# error if we can't compute a small enough response. -- michael, 2020-02-14
-sub ix_update_single_state_conds ($self, $example_row) {
-  return { 'me.modSeqChanged' => $example_row->{modSeqChanged} }
 }
 
 =method ix_compare_state($since, $state)

@@ -237,7 +237,6 @@ sub ix_changes ($self, $ctx, $arg = {}) {
         select => [
           'id',
           qw(me.isActive me.modSeqChanged me.modSeqCreated),
-          $rclass->ix_update_extra_select->@*,
         ],
         result_class => 'DBIx::Class::ResultClass::HashRefInflator',
         order_by => 'me.modSeqChanged',

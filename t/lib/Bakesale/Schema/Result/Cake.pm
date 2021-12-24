@@ -146,16 +146,6 @@ sub ix_update_extra_search ($self, $ctx, $arg) {
   );
 }
 
-sub ix_update_single_state_conds ($self, $example_row) {
-  if ($example_row->{jointModSeq} =~ /\AA-([0-9]+)\z/) {
-    return { 'recipe.modSeqChanged' => "$1" }
-  } elsif ($example_row->{jointModSeq} =~ /\AB-([0-9]+)\z/) {
-    return { 'me.modSeqChanged' => "$1" }
-  }
-
-  Carp::confess("Unreachable code reached.");
-}
-
 sub ix_created ($self, $ctx, $row) {
   return unless $row->type eq 'wedding';
 
